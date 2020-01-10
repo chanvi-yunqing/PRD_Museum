@@ -42,7 +42,7 @@
 
 - 利用百度AI中的语音识别功能将音频流转录为应用程序可以向用户显示或作为命令输入操作的文本，将60秒以内的语音精准识别为文字，可适用于手机语音输入、智能语音交互、语音指令、语音搜索等短语音交互场景，使用大规模数据集训练语言模型，根据语音的内容理解和停顿智能匹配合适的标点符号（包括，。！？），使识别结果的表现方式贴合表述，更加可懂。[百度AI语音识别详情](https://ai.baidu.com/tech/speech/asr)
 
-- 利用百度AI中的通用物体和场景识别功能拍照识别博物馆展品，该功能支持识别动物、植物、商品、建筑、风景、动漫、食材、公众人物等10万个常见物体及场景，接口返回大类及细分类的名称结果，同时支持获取图片识别结果对应的百科信息，接口返回百科词条URL、图片和摘要描述，可选择是否需要返回百科信息。[百度AI通用物体和场景识别详情](https://ai.baidu.com/tech/speech/asr)
+- 利用百度AI中的通用物体和场景识别功能拍照识别博物馆展品，该功能支持识别动物、植物、商品、建筑、风景、动漫、食材、公众人物等10万个常见物体及场景，接口返回大类及细分类的名称结果，同时支持获取图片识别结果对应的百科信息，接口返回百科词条URL、图片和摘要描述，可选择是否需要返回百科信息。[百度AI通用物体和场景识别详情](https://ai.baidu.com/tech/imagerecognition/general)
 
 ### PRD5.人工智能概率性与用户痛点
 
@@ -112,6 +112,8 @@
 - 支持自助训练专属模型：支持在语音自训练平台上自助训练模型，上传词汇文本即可零代码完成训练，精准提升业务领域词汇识别率5-25%，并可专属使用
 
 ##### 代码调用尝试
+
+- 输入
 ```
 from aip import AipSpeech
 
@@ -123,6 +125,85 @@ SECRET_KEY = '你的 Secret Key'
 client = AipSpeech(APP_ID, API_KEY, SECRET_KEY)
 ```
 
+#### API使用水平（通用物体和场景识别）
+ 
+- 识别物体或场景名称：支持识别动物、植物、商品、建筑、风景、动漫、食材、公众人物等10万个常见物体及场景，接口返回大类及细分类的名称结果
+
+- 获取百科信息：支持获取图片识别结果对应的百科信息，接口返回百科词条URL、图片和摘要描述，可选择是否需要返回百科信息
+
+#### 代码调用尝试
+
+- 输入
+
+```
+# encoding:utf-8
+
+import requests
+import base64
+
+'''
+通用物体和场景识别
+'''
+
+request_url = "https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general"
+# 二进制方式打开图片文件
+f = open('[本地文件]', 'rb')
+img = base64.b64encode(f.read())
+
+params = {"image":img}
+access_token = '[调用鉴权接口获取的token]'
+request_url = request_url + "?access_token=" + access_token
+headers = {'content-type': 'application/x-www-form-urlencoded'}
+response = requests.post(request_url, data=params, headers=headers)
+if response:
+    print (response.json())
+
+```
+
+- 输出
+```
+HTTP/1.1 200 OK
+x-bce-request-id: 73c4e74c-3101-4a00-bf44-fe246959c05e
+Cache-Control: no-cache
+Server: BWS
+Date: Tue, 18 Oct 2016 02:21:01 GMT
+Content-Type: application/json;charset=UTF-8
+{
+	"log_id": 327863200205075661,
+	"result_num": 5,
+	"result": [{
+		"score": 0.967622,
+		"root": "公众人物",
+		"baike_info": {
+			"baike_url": "http://baike.baidu.com/item/%E6%96%B0%E5%9E%A3%E7%BB%93%E8%A1%A3/8035884",
+			"image_url": "http://imgsrc.baidu.com/baike/pic/item/91ef76c6a7efce1b27893518a451f3deb58f6546.jpg",
+			"description": "新垣结衣(Aragaki Yui)，1988年6月11日出生于冲绳县那霸市。日本女演员、歌手、模特。毕业于日出高中。2001年，参加《nicola》模特比赛并获得最优秀奖。2005年，因出演现代剧《涩谷15》而作为演员出道。2006年，参演校园剧《我的老大，我的英雄》；同年，她还出版了个人首本写真集《水漾青春》。2007年，她从日出高校毕业后开始专注于演艺发展，并发表个人首张音乐专辑《天空》；同年，新垣结衣还主演了爱情片《恋空》，而她也凭借该片获得了多个电影新人奖项。2010年，主演爱情片《花水木》。2011年，主演都市剧《全开女孩》。2012年，相继参演现代剧《Legal High》、剧情片《剧场版新参者：麒麟之翼》。2013年，主演都市剧《飞翔情报室》。2014年，她主演了剧情片《黎明的沙耶》。2016年，主演爱情喜剧《逃避虽可耻但有用》，并凭借该剧获得了多个电视剧女主角奖项。2017年，主演爱情片《恋爱回旋》，凭借该片获得第60届蓝丝带奖最佳女主角；同年11月，她还凭借医疗剧《Code Blue 3》获得第94届日剧学院赏最佳女配角。"
+		},
+		"keyword": "新垣结衣"
+	},
+	{
+		"score": 0.716067,
+		"root": "人物-人物特写",
+		"keyword": "头发"
+	},
+	{
+		"score": 0.421281,
+		"root": "商品-穿戴",
+		"keyword": "围巾"
+	},
+	{
+		"score": 0.22347,
+		"root": "商品-五金",
+		"keyword": "拉链"
+	},
+	{
+		"score": 0.028031,
+		"root": "商品-穿戴",
+		"keyword": "脖套"
+	}]
+}
+
+```
 
 
 
